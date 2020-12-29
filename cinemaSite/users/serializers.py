@@ -36,7 +36,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = CustomAccountManager.create_user(
+        user = CustomUser.objects.create_user(
             email=validated_data['email'],
             name=validated_data['name'],
             password=validated_data['password'],
