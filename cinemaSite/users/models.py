@@ -3,17 +3,22 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
 
-def create_superuser(self, email, name, password, **kwargs):
-    kwargs.setdefault('is_super', True)
-
-    if kwargs.get('is_super') is not True:
-        raise ValueError(
-            'Superuser must have flag is_super assigned to True'
-        )
-    return self.create_superuser(email, name, password, **kwargs)
-
-
 class CustomAccountManager(BaseUserManager):
+    def create_superuser(self, email, name, password, **kwargs):
+        kwargs.setdefault('is_superuser', True)
+        kwargs.setdefault('is_staff', True)
+        kwargs.setdefault('is_active', True)
+
+        if kwargs.get('is_staff') is not True:
+            raise ValueError(
+                'Superuser must have flag is_staff assigned to True'
+            )
+
+        if kwargs.get('is_superuser') is not True:
+            raise ValueError(
+                'Superuser must have flag is_superuser assigned to True'
+            )
+        return self.create_user(email, name, password, **kwargs)
 
     def create_user(self, email, name, password, **kwargs):
         if not email:
@@ -31,11 +36,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.CharField(max_length=150, unique=True)
     name = models.CharField(max_length=150, unique=True)
-    password_hash = models.CharField(max_length=100)
-    is_super = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
-    USERNAME_FIELD = email
-    REQUIRED_FIELDS = [email]
+    objects = CustomAccountManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.name
