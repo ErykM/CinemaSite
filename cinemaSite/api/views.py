@@ -14,12 +14,3 @@ class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     permission_classes = [IsAuthenticated]
-
-
-class CreateUserView(CreateAPIView):
-
-    model = get_user_model()
-    permission_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = UserSerializer
