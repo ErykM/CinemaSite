@@ -19,11 +19,11 @@ def user_fixture():
 
 
 @pytest.fixture
-def rest_client(user_fixture):
+def rest_client():
     client = APIClient()
 
-    refresh = RefreshToken.for_user(user_fixture)
-    client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+    # refresh = RefreshToken.for_user(user_fixture)
+    # client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
 
     return client
 
